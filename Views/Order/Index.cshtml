@@ -1,5 +1,7 @@
 ﻿@using Northwind.Models
-@model IEnumerable<Order>
+@using Northwind.Models.ViewModels
+@model OrderListViewModel
+<!DOCTYPE html>
 
 <br />
 
@@ -8,7 +10,8 @@
     <button type="button" class="btn btn-secondary" id="requiredToday" name="requiredToday">Ship Today</button>
     <button type="button" class="btn btn-secondary" id="overdue" name="overdue">Overdue</button>
     <button type="button" class="btn btn-secondary" id="notShipped" name="notShipped">Not Yet Shipped</button>
-    <button type="button" class="btn btn-secondary" id="all" name="all">View All</button></div>
+    <button type="button" class="btn btn-secondary" id="all" name="all">View All</button>
+</div>
 <br /><br />
 
 <table class="table table-hover">
@@ -21,8 +24,35 @@
             <th scope="col" class="text-center">Required Date</th>
         </tr>
     </thead>
-    <tbody id="order_table" data-id="@ViewBag.id"></tbody>
+    <tbody id="order_table" data-id="@ViewBag.id">
+        @foreach (var e in Model.Orders)
+        {
+            <tr>
+                <td class="text-center">@e.OrderID</td>
+                <td>@e.ShipName</td>
+                <td>@e.OrderDate</td>
+                <td>@e.ShippedDate</td>
+                <td>@e.RequiredDate</td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+<div class="row mb-3">
+    <div class="col">
+        <button disabled id="first" class="btn btn-outline-secondary" type="button" data-page="1"><i class="fas fa-angle-double-left"></i><span class="d-none d-md-inline"> First</span></button>
+        <button disabled id="prev" class="btn btn-outline-secondary" type="button" data-page="@(Model.PagingInfo.PreviousPage)"><i class="fas fa-angle-left"></i><span class="d-none d-md-inline"> Prev</span></button>
+    </div>
+    <div class="col text-center text-secondary">
+        <span id="start">@(Model.PagingInfo.RangeStart)</span>-<span id="end">@(Model.PagingInfo.RangeEnd)</span>
+        of
+        <span id="total">@(Model.PagingInfo.TotalItems)</span>
+    </div>
+    <div class="col text-right">
+        <button disabled id="next" class="btn btn-outline-secondary" type="button" data-page="@(Model.PagingInfo.NextPage)"><span class="d-none d-md-inline">Next </span><i class="fas fa-angle-right"></i></button>
+        <button disabled id="last" class="btn btn-outline-secondary" data-page="@(Model.PagingInfo.TotalPages)"><span class="d-none d-md-inline">Last </span><i class="fas fa-angle-double-right"></i></button>
+    </div>
+</div>
 <a class="navbar-brand" asp-controller="Order" asp-action="Next"><i class="far fa-compass"></i> Next</a>
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -31,7 +61,7 @@
     {
     <script>
         var url = "";
-        
+
         $(function () {
             getOrders();
             $('#all').on('click', function () {
@@ -58,33 +88,33 @@
                 url = "/required/overdue";
                 getOrders();
             });
-            
 
-                function getOrders() {
-                    var id = $('#order_table').data('id');
-                    $.getJSON({
-                        url: "../../api/order" + url, // This is how you bring in the JSON request (how to filter)
-                        success: function (response, textStatus, jqXhr) {
-                            console.log(response);
-                            $('#order_table').html("");
-                            for (var i = 0; i < response.length; i++) {
-                                var row = "<tr>"
-                                    + "<td>" + response[i].orderID + "</td>"
-                                    + "<td class=\"text-center\">" + response[i].shipName + "</td>"
-                                    + "<td class=\"text-center\">" + (response[i].orderDate).substring(0, 10) + "</td>"
-                                    + "<td class=\"text-center\">" + ((response[i].shippedDate == null) ? "Not yet shipped" : (response[i].shippedDate).substring(0,10)) + "</td>"
-                                    + "<td class=\"text-center\">" + (response[i].requiredDate).substring(0, 10) + "</td>"
-                                    
-                                    + "</tr>";
-                                $('#order_table').append(row);
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            // log the error to the console
-                            console.log("The following error occured: " + textStatus, errorThrown);
+
+            function getOrders() {
+                var id = $('#order_table').data('id');
+                $.getJSON({
+                    url: "../../api/order" + url, // This is how you bring in the JSON request (how to filter)
+                    success: function (response, textStatus, jqXhr) {
+                        console.log(response);
+                        $('#order_table').html("");
+                        for (var i = 0; i < response.length; i++) {
+                            var row = "<tr>"
+                                + "<td>" + response[i].orderID + "</td>"
+                                + "<td class=\"text-center\">" + response[i].shipName + "</td>"
+                                + "<td class=\"text-center\">" + (response[i].orderDate).substring(0, 10) + "</td>"
+                                + "<td class=\"text-center\">" + ((response[i].shippedDate == null) ? "Not yet shipped" : (response[i].shippedDate).substring(0, 10)) + "</td>"
+                                + "<td class=\"text-center\">" + (response[i].requiredDate).substring(0, 10) + "</td>"
+
+                                + "</tr>";
+                            $('#order_table').append(row);
                         }
-                    });
-                }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // log the error to the console
+                        console.log("The following error occured: " + textStatus, errorThrown);
+                    }
+                });
+            }
         });</script>
 }
 

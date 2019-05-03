@@ -6,5 +6,6 @@ namespace Northwind.Models.ViewModels
     {
         public IEnumerable<Order> Orders { get; set; }
         public PagingInfo PagingInfo { get; set; }
+
     }
 }

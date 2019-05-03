@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Northwind.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ namespace Northwind.Models
         public string ShipRegion { get; set; }
         public string ShipPostalCode { get; set; }
         public string ShipCountry { get; set; }
+        // public PagingInfo PagingInfo { get; set; }
         //public Order order { get; set; }
+        
     }
 }
