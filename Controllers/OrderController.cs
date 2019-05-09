@@ -10,20 +10,39 @@ namespace Northwind.Controllers
     public class OrderController : Controller
     {
         private INorthwindRepository repository;
-        public int PageSize = 4;
+        //public int PageSize = 4;
         public OrderController(INorthwindRepository repo) => repository = repo;
 
-        public ViewResult List(int page = 1) => View(new OrderListViewModel{
-                 Orders = repository.Orders
-                    .OrderByDescending(o => o.RequiredDate)
-                    .Skip((page - 1) * PageSize)
-                    .Take(PageSize),
-                 PagingInfo = new PagingInfo{
-                    CurrentPage = page,
-                    ItemsPerPage = PageSize,
-                    TotalItems = repository.Orders.Count()
-                 }
-         });
+        [Authorize(Roles = "Employee")]
+        //public int Index(int page = 1){
+        //    var od = new OrderListViewModel
+        //    {
+        //        Orders = repository.Orders
+        //            .OrderByDescending(o => o.RequiredDate)
+        //            .Skip((page - 1) * PageSize)
+        //            .Take(PageSize),
+        //        PagingInfo = new PagingInfo
+        //        {
+        //            CurrentPage = page,
+        //            ItemsPerPage = PageSize,
+        //            TotalItems = repository.Orders.Count()
+        //        }
+        //    };
+        //    return od.Orders.Count();
+        //}
+        public ViewResult Index(int page = 1) => View(new OrderListViewModel
+        {
+        //    Orders = repository.Orders
+        //            .OrderByDescending(o => o.RequiredDate)
+        //            .Skip((page - 1) * PageSize)
+        //            .Take(PageSize),
+        //    PagingInfo = new PagingInfo
+        //    {
+        //        CurrentPage = page,
+        //        ItemsPerPage = PageSize,
+        //        TotalItems = repository.Orders.Count()
+        //    }
+        });
 
         //public ActionResult Index()
         //{
@@ -37,12 +56,12 @@ namespace Northwind.Controllers
 
         }*/
 
-        [Authorize(Roles = "Employee")]
-        public IActionResult Index(int id)
-        {
-            ViewBag.id = id;
-            return View();
-        }
+        //[Authorize(Roles = "Employee")]
+        //public IActionResult Index(int id)
+        //{
+        //    ViewBag.id = id;
+        //    return View();
+        //}
         /*[Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
