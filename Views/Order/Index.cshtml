@@ -49,7 +49,7 @@
         {
         <script>
             var url = "";
-            var currDate = new Date();
+            var currDate = new Date().toISOString().slice(0, 10);
 
             $(function () {
                 // event listeners for first/next/prev/last buttons
@@ -62,6 +62,7 @@
                     console.log(response.orders.length);
 
                     for (var i = 0; i < response.orders.length; i++) {
+                        var red = (response.orders[i].required < currDate && response.orders[i].shipped == "0001-01-01T00:00:00") ? "style='color:red;'" : "";
                         var myShip = response.orders[i].shipped == "0001-01-01T00:00:00" ? "Not yet shipped" : response.orders[i].shipped.substring(0, 10);
                         var trimOD = response.orders[i].order.substring(0, 10);
                         var trimRD = response.orders[i].required.substring(0, 10);
@@ -70,7 +71,7 @@
                         html += "<td class=\"text-center\">" + response.orders[i].cust + "</td>";
                         html += "<td class=\"text-center\">" + trimOD + "</td>";
                         html += "<td class=\"text-center\">" + myShip + "</td>";
-                        html += "<td class=\"text-center\">" + trimRD + "</td>";
+                        html += "<td class=\"text-center\"" + red + ">" + trimRD + "</td>";
 
                         html += "</tr>";
                     }
@@ -178,15 +179,18 @@
                             // Show content
                             $('#content').show();
                             var html = "";
-                           
+                            console.log("Current date is " + currDate);
+                            
                             for (var i = 0; i < response.length; i++) {
-                                var red = (response[i].requiredDate) < currDate ? "style=\"color: red\"" : "";
+                                var red = (response[i].requiredDate < currDate && response[i].shippedDate == null) ? "style='color:red;'" : "";
+                                //var red = "style='color:red;'";
+                                console.log("Required Date " + response[i].requiredDate + " CurrDate " + currDate + " " + red);
                                 var row = "<tr>"
                                     + "<td>" + response[i].orderID + "</td>"
                                     + "<td class=\"text-center\">" + response[i].shipName + "</td>"
                                     + "<td class=\"text-center\">" + (response[i].orderDate).substring(0, 10) + "</td>"
                                     + "<td class=\"text-center\">" + ((response[i].shippedDate == null) ? "Not yet shipped" : response[i].shippedDate) + "</td>"
-                                    + "<td class=\"text-center\" "+red+">" + (response[i].requiredDate).substring(0, 10) + "</td>"
+                                    + "<td class=\"text-center\"" + red +">" + (response[i].requiredDate).substring(0, 10) + "</td>"
                                         
                                     + "</tr>";
                                 html += row;
